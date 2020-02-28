@@ -53,18 +53,11 @@ module.exports = {
 					}
 				},
 			},
-			{
-				test: /\.hbs$/,
-				loader: "handlebars-template-loader",
-				query: {
-					attributes: ['img:src']
-				}}
 		]
 	},
 	plugins: [
 		new HtmlWebpackPlugin({
-			template: 'src/view/index.hbs',
-			templateParameters: require('./src/view/index.json'),
+			template: 'src/index.html',
 			filename: "index.html"
 		}),
 		new CleanWebpackPlugin()

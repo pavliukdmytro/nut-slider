@@ -1,63 +1,72 @@
-require('./style.scss');
+import './styles/styles.scss';
 
-window.$ = require('jquery');
+window.$ = window.jQuery = require('jquery');
 
-require('slick-carousel');
-require('slick-carousel/slick/slick.scss');
+let params = ['nut-slider__item_left', 'nut-slider__item_center', 'nut-slider__item_right'];
 
-$('.nut-slider').on('init', function(event, slick){
+//$('.nut-slider .nut-slider__item').each((i, el) => {
+//    if(i === 3) return;
+//    $(el).addClass( params[i]);
+//});
 
-    let callback = function(entries, observer) {
-        $(entries).each((i, entry) => {
-            // console.log(entry.intersectionRatio);
-            if(entry.intersectionRatio > 0) {
-                $(entry.target).addClass('nut-slider__show');
-            } else {
-                $(entry.target).removeClass('nut-slider__show')
-                    .removeClass('nut-slider__first')
-                    .removeClass('nut-slider__second')
-                    .removeClass('nut-slider__third')
-            }
-        })
-        $('.nut-slider__show').removeClass('nut-slider__first')
-            .removeClass('nut-slider__second')
-            .removeClass('nut-slider__third');
+class NutSlider {
+    constructor(container) {
+        this.container = $(container);
+    }
+    
+    scrollBottom() {
+        const itemLeft = this.container.find('.nut-slider__item_left');
+        const itemCenter = this.container.find('.nut-slider__item_center');
+        const itemRight = this.container.find('.nut-slider__item_right');
+        
+        if(!itemLeft.next().next().next().length) return;
+        
+        itemLeft.removeClass('nut-slider__item_left');
+        itemCenter.addClass('nut-slider__item_left');
+        itemCenter.removeClass('nut-slider__item_center');
+        itemRight.addClass('nut-slider__item_center');
+        itemRight.removeClass('nut-slider__item_right');
+        itemRight.next().addClass('nut-slider__item_right');
+    }
+    
+    scrollTop() {
+        const itemLeft = this.container.find('.nut-slider__item_left');
+        const itemCenter = this.container.find('.nut-slider__item_center');
+        const itemRight = this.container.find('.nut-slider__item_right');
+        
+        if(!itemRight.prev().prev().prev().length) return;
+    
+        itemLeft.prev().addClass('nut-slider__item_left');
+        itemLeft.removeClass('nut-slider__item_left');
+        itemLeft.addClass('nut-slider__item_center');
+        itemCenter.addClass('nut-slider__item_right');
+        itemCenter.removeClass('nut-slider__item_center');
+        itemRight.removeClass('nut-slider__item_right');
+    }
+    
+    touchHandler() {
+        this.container.on('touchstart', (e) => {
+            const start = Math.floor(e.touches[0].screenY);
+            let move;
+            
+            const touchMove = (e) => {
+                move = Math.floor(e.touches[0].screenY);
+            };
+    
+            $(window).on('touchmove', touchMove);
+            $(window).one('touchend', (e) => {
+                if(move) e.preventDefault();
+                //this.scrollBottom();
+                this.scrollTop();
+                $(window).off('touchmove', touchMove)
+            });
+        });
+    }
+    
+    start() {
+        this.touchHandler();
+    }
+}
 
-        if($('.nut-slider__show').eq(0).length) {
-            $('.nut-slider__show').eq(0).addClass('nut-slider__first');
-        }
-        if($('.nut-slider__show').eq(1).length) {
-            $('.nut-slider__show').eq(1).addClass('nut-slider__second');
-        }
-        if($('.nut-slider__show').eq(2).length) {
-            $('.nut-slider__show').eq(2).addClass('nut-slider__third');
-        }
-    };
-    let observer = new IntersectionObserver(callback);
-
-    $('.slick-slide').each((i, target) => {
-        var options = {
-            // root: document.querySelector('#scrollArea'),
-            rootMargin: '-20px',
-            threshold: 1
-        };
-        observer.observe(target, options);
-    })
-});
-$('.nut-slider').slick({
-    vertical: true,
-    slidesToShow: 1,
-    centerMode: true,
-    arrows: false,
-    verticalSwiping: true,
-    speed: 300,
-    infinite: false,
-    initialSlide: 2
-});
-
-
-
-
-
-
-
+const slider = new NutSlider('.nut-slider');
+slider.start();
