@@ -1,31 +1,42 @@
 body {
 	min-height: 100%;
 }
+//.nut-slider__container{
+//	background-color: black;
+//}
 .nut-slider{
 	max-width: 500px;
 	margin-left: auto;
 	margin-right: auto;
-	height: 300px;
 	position: relative;
 	//perspective: 1000px;
 	transform-style: preserve-3d;
-	//background-color: green;
+	&:after{
+		content: '';
+		position: absolute;
+		top: 25px;
+		left: 0px;
+		right: 0px;
+		bottom: 25px;
+		background: linear-gradient(#BBBDC0, #0E0E0E);
+		z-index: -100;
+		transform: translateZ(-80px);
+	}
 	&__item {
-		width: 200px;
+		width: 100%;
 		height: 100px;
 		border: 1px solid black;
 		font-size: 24px;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		transition: 2s;
+		transition: 1s ease, .1s opacity ease;
+		//transition: 1s ease;
 		position: absolute;
 		top: 0px;
 		transform: rotateX(90deg);
-		transform-origin: top;
 		opacity: 0;
-		//border-top-left-radius: 10px 30px;
-		//border-bottom-left-radius: 10px 30px;
+		transform-origin: top;
 	}
 	.nut-slider__item_left{
 		transform: rotateX(40deg);
@@ -36,19 +47,24 @@ body {
 		border-top-right-radius: 10px 30px;
 		border-bottom-right-radius: 10px 56px;
 		opacity: 1;
+		position: static;
+		//margin-top: -30px;
 	}
 	.nut-slider__item_center{
 		top: 50%;
-		transform: translateY(-50%);
+		transform: rotateX(0deg);
 		background-color: #9d9fa2;
 		border-top-left-radius: 10px 30px;
 		border-bottom-left-radius: 9px 35px;
 		border-top-right-radius: 10px 30px;
 		border-bottom-right-radius: 9px 35px;
 		opacity: 1;
+		position: static;
+		transform-origin: bottom;
+		//transform-origin: center;
 	}
 	.nut-slider__item_right{
-		bottom: 0px;
+		bottom: 20px;
 		background: linear-gradient(#808285, #0E0E0E);
 		top: auto;
 		transform-origin: top;
@@ -58,11 +74,13 @@ body {
 		border-top-right-radius: 15px 75px;
 		border-bottom-right-radius: 10px 56px;
 		opacity: 1;
+		position: static;
 	}
 	.nut-slider__item_right ~ .nut-slider__item{
+		//bottom: 20px;
 		bottom: 0px;
 		transform: rotateX(-90deg);
-		transform-origin: bottom;
+		transform-origin: top;
 		background-color: black;
 		top: auto;
 		opacity: 0;

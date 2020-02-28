@@ -25,6 +25,7 @@ class NutSlider {
         const itemRight = this.container.find('.nut-slider__item_right');
 
         if(!itemLeft.next().next().next().length) return;
+        this.vibrate(200);
 
         itemLeft.removeClass('nut-slider__item_left');
         itemCenter.addClass('nut-slider__item_left');
@@ -32,7 +33,6 @@ class NutSlider {
         itemRight.addClass('nut-slider__item_center');
         itemRight.removeClass('nut-slider__item_right');
         itemRight.next().addClass('nut-slider__item_right');
-        this.vibrate(200);
     }
 
     scrollTop() {
@@ -41,6 +41,7 @@ class NutSlider {
         const itemRight = this.container.find('.nut-slider__item_right');
 
         if(!itemRight.prev().prev().prev().length) return;
+        this.vibrate(200);
 
         itemLeft.prev().addClass('nut-slider__item_left');
         itemLeft.removeClass('nut-slider__item_left');
@@ -48,7 +49,6 @@ class NutSlider {
         itemCenter.addClass('nut-slider__item_right');
         itemCenter.removeClass('nut-slider__item_center');
         itemRight.removeClass('nut-slider__item_right');
-        this.vibrate(200);
     }
 
     touchHandler() {
@@ -90,23 +90,18 @@ class NutSlider {
         if("oVibrate" in navigator)  return navigator.oVibrate(val);
         if("mozVibrate" in navigator)  return navigator.mozVibrate(val);
         if("webkitVibrate" in navigator)  return navigator.webkitVibrate(val);
-        console.warn('Ваш браузер не поддерживает vibration Api');
-    }
-
-    init() {
-        const itemLeft = parseInt(getComputedStyle(this.container.find('.nut-slider__item_left')[0]).height);
-        const itemCenter =  parseInt(getComputedStyle(this.container.find('.nut-slider__item_center')[0]).height);
-        const itemRight = parseInt(getComputedStyle(this.container.find('.nut-slider__item_right')[0]).height);
-        // console.log(itemLeft, itemCenter, itemRight);
-        this.container.css({'height': itemLeft + itemCenter + itemRight + 'px'})
+        // console.warn('Ваш браузер не поддерживает vibration Api');
+        document.getElementById('error').innerHTML = "Ваш браузер не поддерживает vibration Api .. попробуйте открыть пример в мобильном fixefox, там все точно работает";
     }
 
 
     start() {
         this.touchHandler();
-        this.init();
     }
 }
 
-const slider = new NutSlider('.nut-slider');
+const slider = new NutSlider(document.querySelector('.nut-slider'));
 slider.start();
+
+const slider2 = new NutSlider('.nut-slider-2');
+slider2.start();
