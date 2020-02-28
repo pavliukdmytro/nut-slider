@@ -30,13 +30,22 @@ body {
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		transition: 1s ease, .1s opacity ease;
 		//transition: 1s ease;
 		position: absolute;
 		top: 0px;
-		transform: rotateX(90deg);
 		opacity: 0;
-		transform-origin: top;
+		border-top-left-radius: 10px 30px;
+		border-bottom-left-radius: 10px 56px;
+		border-top-right-radius: 10px 30px;
+		border-bottom-right-radius: 10px 56px;
+		&.nut-slider__item_down {
+			transform-origin: top;
+			transform: rotateX(90deg);
+		}
+		&_up {
+			transform-origin: bottom;
+			transform: rotateX(90deg);
+		}
 	}
 	.nut-slider__item_left{
 		transform: rotateX(40deg);
@@ -49,6 +58,11 @@ body {
 		opacity: 1;
 		position: static;
 		//margin-top: -30px;
+		transition: 1s ease, .1s opacity ease;
+		&.nut-slider__item_up {
+			transform: rotateX(40deg);
+			transform-origin: bottom;
+		}
 	}
 	.nut-slider__item_center{
 		top: 50%;
@@ -60,8 +74,14 @@ body {
 		border-bottom-right-radius: 9px 35px;
 		opacity: 1;
 		position: static;
-		transform-origin: bottom;
+		transition: 1s ease, .1s opacity ease;
 		//transform-origin: center;
+		&.nut-slider__item_down{
+			transform-origin: bottom;
+		}
+		&.nut-slider__item_up{
+			transform-origin: top;
+		}
 	}
 	.nut-slider__item_right{
 		bottom: 20px;
@@ -69,20 +89,30 @@ body {
 		top: auto;
 		transform-origin: top;
 		transform: rotateX(-40deg);
+		opacity: 1;
+		position: static;
 		border-top-left-radius: 15px 75px;
 		border-bottom-left-radius: 10px 56px;
 		border-top-right-radius: 15px 75px;
 		border-bottom-right-radius: 10px 56px;
-		opacity: 1;
-		position: static;
+		transition: 1s ease, .1s opacity ease;
+		&.nut-slider__item_up {
+
+		}
 	}
 	.nut-slider__item_right ~ .nut-slider__item{
 		//bottom: 20px;
 		bottom: 0px;
-		transform: rotateX(-90deg);
 		transform-origin: top;
 		background-color: black;
 		top: auto;
 		opacity: 0;
+		border-top-left-radius: 15px 75px;
+		border-bottom-left-radius: 10px 56px;
+		border-top-right-radius: 15px 75px;
+		border-bottom-right-radius: 10px 56px;
+		&.nut-slider__item_down{
+			transform: rotateX(-90deg);
+		}
 	}
 }

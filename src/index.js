@@ -27,12 +27,17 @@ class NutSlider {
         if(!itemLeft.next().next().next().length) return;
         this.vibrate(200);
 
-        itemLeft.removeClass('nut-slider__item_left');
-        itemCenter.addClass('nut-slider__item_left');
-        itemCenter.removeClass('nut-slider__item_center');
-        itemRight.addClass('nut-slider__item_center');
-        itemRight.removeClass('nut-slider__item_right');
-        itemRight.next().addClass('nut-slider__item_right');
+        this.container.find('.nut-slider__item').addClass('nut-slider__item_down');
+        this.container.find('.nut-slider__item').removeClass('nut-slider__item_up');
+        // console.log(3241234);
+        setTimeout(() => {
+            itemLeft.removeClass('nut-slider__item_left');
+            itemCenter.addClass('nut-slider__item_left');
+            itemCenter.removeClass('nut-slider__item_center');
+            itemRight.addClass('nut-slider__item_center');
+            itemRight.removeClass('nut-slider__item_right');
+            itemRight.next().addClass('nut-slider__item_right');
+        });
     }
 
     scrollTop() {
@@ -43,12 +48,17 @@ class NutSlider {
         if(!itemRight.prev().prev().prev().length) return;
         this.vibrate(200);
 
-        itemLeft.prev().addClass('nut-slider__item_left');
-        itemLeft.removeClass('nut-slider__item_left');
-        itemLeft.addClass('nut-slider__item_center');
-        itemCenter.addClass('nut-slider__item_right');
-        itemCenter.removeClass('nut-slider__item_center');
-        itemRight.removeClass('nut-slider__item_right');
+        this.container.find('.nut-slider__item').removeClass('nut-slider__item_down');
+        this.container.find('.nut-slider__item').addClass('nut-slider__item_up');
+
+        setTimeout(() => {
+            itemLeft.prev().addClass('nut-slider__item_left');
+            itemLeft.removeClass('nut-slider__item_left');
+            itemLeft.addClass('nut-slider__item_center');
+            itemCenter.addClass('nut-slider__item_right');
+            itemCenter.removeClass('nut-slider__item_center');
+            itemRight.removeClass('nut-slider__item_right');
+        }, 4);
     }
 
     touchHandler() {
