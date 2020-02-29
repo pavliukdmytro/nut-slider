@@ -3,11 +3,12 @@ import './styles/styles.scss';
 window.$ = window.jQuery = require('jquery');
 
 class NutSlider {
-    constructor(slider) {
+    constructor(slider, clearMargin) {
         this.slider = slider;
         this.slides = slider.children;
         this.scrollController = 0;
         this.sliderRotateCounter = 0;
+        this.clearMargin = clearMargin;
         this.scrollBottom = this.scrollBottom.bind(this);
         this.scrollTop = this.scrollTop.bind(this);
         this.rotateXSlider = this.rotateXSlider.bind(this);
@@ -24,7 +25,7 @@ class NutSlider {
         //create circle
         for(let i = 0; i < this.slides.length; i++) {
             this.slides[i].style.cssText = `transform: rotateX(-${rotate}deg)
-                                            translateZ(${circleLength / (Math.PI * 2) - 7}px);
+                                            translateZ(${circleLength / (Math.PI * 2) - this.clearMargin}px);
                                             top: calc(50% - ${circleLength / 6 / 2}px);
                                             left: calc(50% - ${parseInt(getComputedStyle(this.slides[0]).width) / 2}px);
                                             `;
@@ -133,5 +134,5 @@ class NutSlider {
     }
 }
 
-const slider = new NutSlider(document.querySelector('.nut-slider'));
+const slider = new NutSlider(document.querySelector('.nut-slider'), 7);
 slider.init();
