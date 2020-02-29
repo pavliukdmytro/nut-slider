@@ -1,7 +1,5 @@
 import './styles/styles.scss';
 
-window.$ = window.jQuery = require('jquery');
-
 class NutSlider {
     constructor(slider, clearMargin) {
         this.slider = slider;
