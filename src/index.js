@@ -2,116 +2,136 @@ import './styles/styles.scss';
 
 window.$ = window.jQuery = require('jquery');
 
-let params = ['nut-slider__item_left', 'nut-slider__item_center', 'nut-slider__item_right'];
-
-//$('.nut-slider .nut-slider__item').each((i, el) => {
-//    if(i === 3) return;
-//    $(el).addClass( params[i]);
-//});
-
-
 class NutSlider {
-    constructor(container) {
-        this.container = $(container);
-        this.scrollController = '';
-        this.scrollTop = this.scrollTop.bind(this);
+    constructor(slider) {
+        this.slider = slider;
+        this.slides = slider.children;
+        this.scrollController = 0;
+        this.sliderRotateCounter = 0;
         this.scrollBottom = this.scrollBottom.bind(this);
-        this.vInterval = undefined;
+        this.scrollTop = this.scrollTop.bind(this);
+        this.rotateXSlider = this.rotateXSlider.bind(this);
     }
-
-    scrollBottom() {
-        const itemLeft = this.container.find('.nut-slider__item_left');
-        const itemCenter = this.container.find('.nut-slider__item_center');
-        const itemRight = this.container.find('.nut-slider__item_right');
-
-        if(!itemLeft.next().next().next().length) return;
-        this.vibrate(200);
-
-        this.container.find('.nut-slider__item').addClass('nut-slider__item_down');
-        this.container.find('.nut-slider__item').removeClass('nut-slider__item_up');
-        // console.log(3241234);
-        setTimeout(() => {
-            itemLeft.removeClass('nut-slider__item_left');
-            itemCenter.addClass('nut-slider__item_left');
-            itemCenter.removeClass('nut-slider__item_center');
-            itemRight.addClass('nut-slider__item_center');
-            itemRight.removeClass('nut-slider__item_right');
-            itemRight.next().addClass('nut-slider__item_right');
-        });
+    
+    createCircle() {
+        let circleLength = 0;
+        let rotate = 0;
+        //count all slides height
+        for(let i = 0; i < this.slides.length; i++) {
+            if(i > 5) continue;
+            circleLength += parseInt(getComputedStyle(this.slides[i]).height);
+        }
+        //create circle
+        for(let i = 0; i < this.slides.length; i++) {
+            this.slides[i].style.cssText = `transform: rotateX(-${rotate}deg)
+                                            translateZ(${circleLength / (Math.PI * 2) - 7}px);
+                                            top: calc(50% - ${circleLength / 6 / 2}px);
+                                            left: calc(50% - ${parseInt(getComputedStyle(this.slides[0]).width) / 2}px);
+                                            `;
+            rotate += 360 / 6;
+        }
+        this.slider.style.height = (circleLength / (Math.PI  * 2)) * 2 + 100 + 'px';
     }
-
-    scrollTop() {
-        const itemLeft = this.container.find('.nut-slider__item_left');
-        const itemCenter = this.container.find('.nut-slider__item_center');
-        const itemRight = this.container.find('.nut-slider__item_right');
-
-        if(!itemRight.prev().prev().prev().length) return;
-        this.vibrate(200);
-
-        this.container.find('.nut-slider__item').removeClass('nut-slider__item_down');
-        this.container.find('.nut-slider__item').addClass('nut-slider__item_up');
-
-        setTimeout(() => {
-            itemLeft.prev().addClass('nut-slider__item_left');
-            itemLeft.removeClass('nut-slider__item_left');
-            itemLeft.addClass('nut-slider__item_center');
-            itemCenter.addClass('nut-slider__item_right');
-            itemCenter.removeClass('nut-slider__item_center');
-            itemRight.removeClass('nut-slider__item_right');
-        }, 4);
+    
+    initShowSlide() {
+        this.slides[this.slides.length - 1].classList.add('nut-slider__top');
+        this.slides[0].classList.add('nut-slider__center');
+        this.slides[1].classList.add('nut-slider__bottom');
     }
-
+    
     touchHandler() {
-        this.container.on('touchstart', (e) => {
-            const start = Math.floor(e.touches[0].screenY);
+        let mobileDevice = false;
+        if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+            mobileDevice = true;
+        }
+        this.slider.addEventListener(!mobileDevice ? 'mousedown' : 'touchstart', (e) => {
+            const start = !mobileDevice ? e.pageY : Math.floor(e.touches[0].screenY);
             let move;
-
+    
             const touchMove = (e) => {
-                move = Math.floor(e.touches[0].screenY);
-                // console.log( start,  move);
+                move = !mobileDevice ? e.pageY : Math.floor(e.touches[0].screenY);
                 clearTimeout(this.scrollController);
                 if(start > move) {
-                    // console.log('bottom');
                     if(start - move > 20) {
                         this.scrollController = setTimeout( this.scrollTop,100);
                     }
-
                 } else {
-                    // console.log('top');
                     if(move - start > 20) {
                         this.scrollController = setTimeout( this.scrollBottom,100);
                     }
                 }
             };
-
-
-            $(window).on('touchmove', touchMove);
-            $(window).one('touchend', (e) => {
+            
+            window.addEventListener(!mobileDevice ? 'mousemove' :'touchmove', touchMove);
+            window.addEventListener(!mobileDevice ? 'mouseup' :'touchend', (e) => {
                 if(move) e.preventDefault();
-                //this.scrollBottom();
-
-                $(window).off('touchmove', touchMove)
-            });
+                window.removeEventListener(!mobileDevice ? 'mousemove' :'touchmove', touchMove)
+            }, {once: true});
         });
     }
-    //вибрация
+    
     vibrate(val){
         if("vibrate" in navigator)  return navigator.vibrate(val);
         if("oVibrate" in navigator)  return navigator.oVibrate(val);
         if("mozVibrate" in navigator)  return navigator.mozVibrate(val);
         if("webkitVibrate" in navigator)  return navigator.webkitVibrate(val);
-        // console.warn('Ваш браузер не поддерживает vibration Api');
-        document.getElementById('error').innerHTML = "Ваш браузер не поддерживает vibration Api .. попробуйте открыть пример в мобильном fixefox, там все точно работает";
     }
-
-
-    start() {
+    
+    scrollBottom() {
+        const slideTop = this.slider.querySelector('.nut-slider__top');
+        const slideCenter = this.slider.querySelector('.nut-slider__center');
+        const slideBottom = this.slider.querySelector('.nut-slider__bottom');
+        
+        const moveSlide = (slide, slideClass) => {
+            if(slide.nextElementSibling === null) {
+                this.slides[0].classList.add(slideClass);
+            } else {
+                slide.nextElementSibling.classList.add(slideClass);
+            }
+            slide.classList.remove(slideClass);
+        };
+        
+        moveSlide(slideTop, 'nut-slider__top');
+        moveSlide(slideCenter, 'nut-slider__center');
+        moveSlide(slideBottom, 'nut-slider__bottom');
+    
+        this.rotateXSlider(this.sliderRotateCounter += 60);
+        this.vibrate(200);
+    }
+    
+    scrollTop() {
+        const slideTop = this.slider.querySelector('.nut-slider__top');
+        const slideCenter = this.slider.querySelector('.nut-slider__center');
+        const slideBottom = this.slider.querySelector('.nut-slider__bottom');
+    
+        const moveSlide = (slide, slideClass) => {
+            if(slide.previousElementSibling === null) {
+                this.slides[this.slides.length - 1].classList.add(slideClass);
+            } else {
+                slide.previousElementSibling.classList.add(slideClass);
+            }
+            slide.classList.remove(slideClass);
+        }
+    
+        moveSlide(slideTop, 'nut-slider__top');
+        moveSlide(slideCenter, 'nut-slider__center');
+        moveSlide(slideBottom, 'nut-slider__bottom');
+    
+        this.rotateXSlider(this.sliderRotateCounter -= 60);
+        this.vibrate(200);
+    }
+    
+    rotateXSlider(rotate) {
+        this.slider.style.transform = `rotateX(${rotate}deg)`;
+    }
+    
+    init() {
+        this.createCircle();
+        this.initShowSlide();
         this.touchHandler();
+        this.slider.classList.add('nut-slider__init');
     }
 }
 
 const slider = new NutSlider(document.querySelector('.nut-slider'));
-slider.start();
-
-const slider2 = new NutSlider('.nut-slider-2');
-slider2.start();
+slider.init();
