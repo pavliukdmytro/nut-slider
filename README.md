@@ -1,6 +1,6 @@
 # Nut Slider
 
-[example]  (https://pavliukdmytro.github.io/nut-slider/)
+[example](https://pavliukdmytro.github.io/nut-slider/)
 
 ### initialization
 
