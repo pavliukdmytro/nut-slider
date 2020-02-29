@@ -1,8 +1,8 @@
-#Nut Slider
+# Nut Slider
 
 [example]  (https://pavliukdmytro.github.io/nut-slider/)
 
-###initialization
+### initialization
 
 ```javascript
 const slider = new NutSlider(document.querySelector('.nut-slider'));
