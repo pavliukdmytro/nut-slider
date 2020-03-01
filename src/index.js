@@ -64,7 +64,7 @@ class NutSlider {
             window.addEventListener(!mobileDevice ? 'mousemove' :'touchmove', touchMove);
             window.addEventListener(!mobileDevice ? 'mouseup' :'touchend', (e) => {
                 if(move) e.preventDefault();
-                window.removeEventListener(!mobileDevice ? 'mousemove' :'touchmove', touchMove)
+                window.removeEventListener(!mobileDevice ? 'mousemove' :'touchmove', touchMove);
             }, {once: true});
         });
     }
