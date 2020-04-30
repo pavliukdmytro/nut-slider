@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/pavliukdmytro/webpack-react#readme",
   "dependencies": {
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "node-sass": "^4.13.0",
     "optimize-css-assets-webpack-plugin": "^5.0.3",
     "resolve-url-loader": "^3.1.1",
